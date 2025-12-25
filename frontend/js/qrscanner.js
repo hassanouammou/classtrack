@@ -24,7 +24,7 @@ async function openQRScanner() {
             <p style="color: #6b7280; margin-bottom: 20px;">Pointez la caméra vers le code QR du professeur</p>
             
             <div id="qr-video-container" style="margin-bottom: 20px; background: #000; border-radius: 8px; overflow: hidden; position: relative;">
-                <video id="qr-video" style="width: 100%; height: 300px; display: block; transform: scaleX(-1);"></video>
+                <video id="qr-video" style="width: 100%; height: 300px; display: block; object-fit: cover; transform: scaleX(-1);"></video>
                 <canvas id="qr-canvas" style="display: none;"></canvas>
             </div>
             
@@ -84,14 +84,36 @@ async function initQRCamera() {
             return;
         }
         
-        // Accéder à la caméra
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { 
-                facingMode: 'environment',
-                width: { ideal: 640 },
-                height: { ideal: 480 }
+        // Détecter si c'est un appareil mobile
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+                         || (window.innerWidth <= 768);
+        
+        // Configuration caméra : arrière pour mobile, frontale pour PC
+        const constraints = {
+            video: {
+                width: { ideal: 1280, max: 1920 },
+                height: { ideal: 720, max: 1080 }
             }
-        });
+        };
+        
+        // Sur mobile : forcer la caméra arrière
+        // Sur PC : utiliser la caméra par défaut (webcam)
+        if (isMobile) {
+            constraints.video.facingMode = { ideal: 'environment' }; // Caméra arrière sur mobile
+        } else {
+            constraints.video.facingMode = { ideal: 'user' }; // Caméra frontale sur PC
+        }
+        
+        // Vérifier le contexte sécurisé requis par les navigateurs mobiles
+        const isLocalHost = ['localhost','127.0.0.1'].includes(window.location.hostname);
+        const isSecureContext = window.isSecureContext || window.location.protocol === 'https:' || isLocalHost;
+        if (!isSecureContext) {
+            // Sur HTTP (IP locale), la plupart des navigateurs bloquent la caméra
+            showQRMessage('La caméra est bloquée car la page n\'est pas en HTTPS. Ouvrez le site en https ou utilisez le code manuel.', 'error');
+            return;
+        }
+        
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
         
         qrCodeStream = stream;
         video.srcObject = stream;
@@ -111,6 +133,8 @@ async function initQRCamera() {
             errorMsg = 'Accès à la caméra refusé. Vérifiez les permissions.';
         } else if (err.name === 'NotFoundError') {
             errorMsg = 'Aucune caméra trouvée sur cet appareil';
+        } else if (err.name === 'OverconstrainedError') {
+            errorMsg = 'Caméra non disponible. Utilisation de la caméra par défaut.';
         }
         showQRMessage(errorMsg, 'error');
     }
@@ -169,8 +193,13 @@ async function submitQRCode() {
     // Le code peut être juste le nom du cours
     const course = qrCode.includes(':') ? qrCode.split(':')[1] : qrCode;
     
+    // URL base de l'API: même logique que api.js
+    const baseUrl = (window.location.port === '8000')
+        ? `${window.location.protocol}//${window.location.hostname}:5000`
+        : window.location.origin;
+    
     try {
-        const res = await fetch('http://localhost:5000/api/mark-attendance', {
+        const res = await fetch(`${baseUrl}/api/mark-attendance`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -89,6 +89,45 @@ body {
     }
 }
 
+/* Touch improvements for mobile */
+@media (hover: none) and (pointer: coarse) {
+    /* Augmenter les zones de touch sur mobile */
+    button, .nav-item, a {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Désactiver les effets hover sur tactile */
+    .nav-item:hover,
+    .stat-card:hover,
+    button:hover {
+        transform: none;
+    }
+    
+    /* Ajouter un effet active visible */
+    button:active,
+    .nav-item:active {
+        opacity: 0.7;
+        transform: scale(0.98);
+    }
+}
+
+/* Smooth scrolling sur mobile */
+@media (max-width: 768px) {
+    * {
+        -webkit-tap-highlight-color: rgba(0, 102, 204, 0.1);
+    }
+    
+    html {
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+    }
+    
+    body {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
 .container-main {
     display: flex;
     height: 100vh;
@@ -476,6 +515,16 @@ body {
     position: relative;
     height: 300px;
     contain: layout style paint;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.chart-wrapper canvas {
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0 auto;
 }
 
 /* TABLE */

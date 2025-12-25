@@ -1,8 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_compress import Compress
 import jwt
 import datetime
+import os
 from functools import wraps
 import pymysql
 from pymysql.cursors import DictCursor
@@ -81,10 +82,29 @@ def token_required(f):
 
 @app.after_request
 def add_cache_headers(response):
+    # Désactiver le cache pour les API
     if request.path.startswith('/api/'):
-        response.headers['Cache-Control'] = 'no-store'
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+    # Pour les fichiers statiques (CSS, JS), permettre le cache mais valider
+    elif request.path.endswith(('.css', '.js', '.html')):
+        response.headers['Cache-Control'] = 'no-cache, must-revalidate'
+        response.headers['Pragma'] = 'no-cache'
     return response
 
+
+FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'frontend'))
+
+@app.route('/', methods=['GET'])
+def home():
+    # Servir la page d'accueil du frontend
+    return send_from_directory(FRONTEND_DIR, 'index.html')
+
+@app.route('/<path:path>', methods=['GET'])
+def serve_frontend(path):
+    # Servir fichiers statiques du frontend (html, css, js, assets)
+    return send_from_directory(FRONTEND_DIR, path)
 
 # ==================== AUTH ====================
 @app.route('/auth/login', methods=['POST'])
@@ -260,5 +280,5 @@ def health():
     return jsonify({'status': 'ok'}), 200
 
 if __name__ == '__main__':
-    print("\nBackend lancé sur http://localhost:5000\n")
-    app.run(debug=True, host='localhost', port=5000)
+    # Lancer en HTTPS (adhoc crée un certificat auto-signé pour le dev)
+    app.run(debug=True, host='0.0.0.0', port=5000, ssl_context='adhoc')

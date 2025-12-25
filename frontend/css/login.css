@@ -344,3 +344,124 @@ body {
         font-size: 14px;
     }
 }
+
+/* ==================== RESPONSIVE IMPROVEMENTS ==================== */
+
+/* Tablet (max-width: 992px) */
+@media (max-width: 992px) {
+    .login-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .login-left {
+        display: none;
+    }
+    
+    .login-right {
+        padding: 40px;
+    }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+    .login-right {
+        padding: 32px 24px;
+    }
+    
+    .login-form-container {
+        max-width: 100%;
+        padding: 32px 24px;
+    }
+    
+    .login-form-header h2 {
+        font-size: 26px;
+    }
+    
+    .login-form-header p {
+        font-size: 14px;
+    }
+    
+    .form-group label {
+        font-size: 13px;
+    }
+    
+    .form-input {
+        padding: 12px 14px;
+        font-size: 15px;
+    }
+    
+    .login-form button[type="submit"] {
+        padding: 13px;
+        font-size: 15px;
+    }
+    
+    .login-theme-toggle {
+        top: 16px;
+        right: 16px;
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* Mobile Small (max-width: 480px) */
+@media (max-width: 480px) {
+    .login-right {
+        padding: 24px 16px;
+    }
+    
+    .login-form-container {
+        padding: 24px 16px;
+    }
+    
+    .login-form-header {
+        margin-bottom: 24px;
+    }
+    
+    .login-form-header h2 {
+        font-size: 24px;
+    }
+    
+    .login-form-header p {
+        font-size: 13px;
+    }
+    
+    .form-group {
+        margin-bottom: 16px;
+    }
+    
+    .form-input {
+        padding: 11px 12px;
+        font-size: 14px;
+    }
+    
+    .login-form button[type="submit"] {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .login-theme-toggle {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
+/* Landscape Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .login-right {
+        padding: 20px;
+        overflow-y: auto;
+    }
+    
+    .login-form-container {
+        padding: 20px;
+    }
+    
+    .login-form-header {
+        margin-bottom: 20px;
+    }
+    
+    .form-group {
+        margin-bottom: 12px;
+    }
+}

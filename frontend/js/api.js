@@ -1,4 +1,9 @@
-const API_URL = 'http://localhost:5000';
+// Détection automatique de l'URL de l'API
+// Cas 1: Frontend servi par Flask sur le même port -> utiliser origin (http/https)
+// Cas 2: Frontend servi via python -m http.server (port 8000) -> pointer vers :5000
+const API_URL = (window.location.port === '8000')
+    ? `${window.location.protocol}//${window.location.hostname}:5000`
+    : window.location.origin;
 
 class API {
     static getToken() { 
@@ -52,7 +57,7 @@ class API {
     // Ajoute cette fonction à la classe API
     static async clearCache() {
         try {
-            const res = await fetch('http://localhost:5000/api/cache/clear', {
+            const res = await fetch(`${API_URL}/api/cache/clear`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${this.getToken()}` }
             });

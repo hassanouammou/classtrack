@@ -1,4 +1,4 @@
-const CACHE_NAME = 'classetrack-v1';
+const CACHE_NAME = 'classetrack-v1.0.3'; // Incrémenter la version pour vider le cache
 const urlsToCache = [
     '/',
     '/css/style.css',

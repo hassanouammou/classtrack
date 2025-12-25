@@ -23,42 +23,23 @@ function debounce(func, wait) {
 // ==================== CACHE MANAGEMENT ====================
 async function refreshAllData() {
     try {
-        // Vider le cache côté serveur
-        await fetch('http://localhost:5000/api/cache/clear', {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${API.getToken()}` }
-        });
-        
         // Recharger les données fraîches
         await loadStats();
-        await loadAttendance();
     } catch (err) {
         console.error('Erreur refresh:', err);
-        // Recharger quand même même si le cache clear échoue
         await loadStats();
-        await loadAttendance();
     }
 }
 
 // Navigation
 function goToDashboard() {
-    document.getElementById('dashboardView').classList.add('active');
-    document.getElementById('attendanceView').classList.remove('active');
-    document.getElementById('pageTitle').textContent = 'Dashboard';
-    document.querySelectorAll('.nav-item').forEach((item, idx) => {
-        item.classList.toggle('active', idx === 0);
-    });
-    refreshAllData();
+    // Rester sur le dashboard - pas de changement de vue nécessaire
+    window.location.href = '/dashboard.html';
 }
 
 function goToAttendance() {
-    document.getElementById('attendanceView').classList.add('active');
-    document.getElementById('dashboardView').classList.remove('active');
-    document.getElementById('pageTitle').textContent = 'Mes Présences';
-    document.querySelectorAll('.nav-item').forEach((item, idx) => {
-        item.classList.toggle('active', idx === 1);
-    });
-    refreshAllData();
+    // Rediriger vers la page dédiée
+    window.location.href = '/myattendances.html';
 }
 
 function logout() {
@@ -158,42 +139,6 @@ async function loadStats() {
     }
 }
 
-// Load Attendance
-async function loadAttendance() {
-    const data = await API.getAttendance();
-    if (data.error) {
-        console.error(data.error);
-        return;
-    }
-    
-    const table = document.getElementById('attendanceTable');
-    
-    let html = '<tr><th>Date</th><th>Heure de début</th><th>Heure de fin</th><th>Cours</th><th>Statut</th></tr>';
-    data.attendance.forEach(att => {
-        const statusClass = att.status === 'Présent' ? 'status-present' : 'status-absent';
-        const icon = att.status === 'Présent' ? 'fas fa-check-circle' : 'fas fa-times-circle';
-        let startTime = '--:--';
-        let endTime = '--:--';
-        if (att.start_time) {
-            const parts = att.start_time.split(':');
-            startTime = parts[0].padStart(2, '0') + ':' + parts[1].padStart(2, '0');
-        }
-        if (att.end_time) {
-            const parts = att.end_time.split(':');
-            endTime = parts[0].padStart(2, '0') + ':' + parts[1].padStart(2, '0');
-        }
-        html += `<tr>
-            <td>${att.date}</td>
-            <td>${startTime}</td>
-            <td>${endTime}</td>
-            <td><strong>${att.course}</strong></td>
-            <td><span class="status-badge ${statusClass}"><i class="fas ${icon}"></i> ${att.status}</span></td>
-        </tr>`;
-    });
-    
-    table.innerHTML = html;
-}
-
 // Draw Chart
 let chartInstance = null;
 
@@ -232,11 +177,38 @@ function drawChart(data) {
                 legend: {
                     position: 'bottom',
                     labels: { 
-                        padding: 20, 
-                        font: { size: 13, weight: '600' },
-                        color: getComputedStyle(document.documentElement).getPropertyValue('--text'),
+                        padding: 20,
+                        boxWidth: 15,
+                        boxHeight: 15,
+                        font: { size: 14, weight: '600' },
+                        color: document.body.classList.contains('dark') ? '#ffffff' : getComputedStyle(document.documentElement).getPropertyValue('--text'),
                         usePointStyle: true,
-                        pointStyle: 'circle'
+                        pointStyle: 'circle',
+                        generateLabels: function(chart) {
+                            const data = chart.data;
+                            if (data.labels.length && data.datasets.length) {
+                                return data.labels.map((label, i) => {
+                                    const meta = chart.getDatasetMeta(0);
+                                    const style = meta.controller.getStyle(i);
+                                    return {
+                                        text: label,
+                                        fillStyle: style.backgroundColor,
+                                        strokeStyle: style.borderColor,
+                                        lineWidth: style.borderWidth,
+                                        hidden: !chart.getDataVisibility(i),
+                                        index: i,
+                                        // Augmenter l'espacement entre les items
+                                        padding: 15
+                                    };
+                                });
+                            }
+                            return [];
+                        }
+                    },
+                    // Augmenter l'espacement entre les légendes
+                    itemMargin: {
+                        horizontal: 20,
+                        vertical: 10
                     }
                 },
                 datalabels: {
