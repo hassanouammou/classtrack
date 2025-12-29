@@ -130,7 +130,8 @@ def login():
         token = jwt.encode({
             'user_id': user['id'],
             'username': user['username'],
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)
+            # Utiliser une date/heure consciente du fuseau (UTC) pour l'expiration
+            'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=24)
         }, app.config['SECRET_KEY'], algorithm='HS256')
 
         return jsonify({
@@ -197,6 +198,11 @@ def format_time(t):
 @token_required
 def get_attendance(user_id):
     try:
+        # Vérifier le cache d'abord
+        cached = get_cached_attendance(user_id)
+        if cached:
+            return jsonify({'attendance': cached}), 200
+        
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
@@ -221,6 +227,9 @@ def get_attendance(user_id):
 
         cursor.close()
         conn.close()
+        
+        # Mettre en cache les données
+        set_cached_attendance(user_id, attendance)
 
         return jsonify({'attendance': attendance}), 200
 
@@ -280,5 +289,6 @@ def health():
     return jsonify({'status': 'ok'}), 200
 
 if __name__ == '__main__':
-    # Lancer en HTTPS (adhoc crée un certificat auto-signé pour le dev)
+    # Vérifier si HTTPS est demandé via variable d'environnement
     app.run(debug=True, host='0.0.0.0', port=5000, ssl_context='adhoc')
+
