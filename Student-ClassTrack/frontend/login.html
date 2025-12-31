@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="ClassTrack - Système de gestion de présence étudiant">
+    <meta name="theme-color" content="#0066cc">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>ClassTrack - Connexion</title>
+    <link rel="icon" href="../assets/favicon.svg">
+    <!-- Preload fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css?v=1.0.7">
+    <link rel="stylesheet" href="css/login.css?v=1.0.7">
+</head>
+<body>
+    <button class="login-theme-toggle" onclick="toggleTheme()" title="Basculer le thème">
+        <i class="fas fa-moon"></i>
+    </button>
+    
+    <div class="login-container">
+        <div class="login-left">
+            <div class="login-left-content">
+                <div class="login-logo">
+                    <div class="login-logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <span>ClassTrack</span>
+                </div>
+                <h1>Bienvenue à ClassTrack</h1>
+                <p>Gérez votre présence et suivez votre assiduité en temps réel</p>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Tableau de bord intuitif et performant</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Suivi détaillé de vos présences</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Connexion sécurisée et confidentialité garantie</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-bell"></i>
+                        <span>Notifications en temps réel</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="login-right">
+            <div class="login-box">
+                <h2>Connexion</h2>
+                <p>Accédez à votre compte étudiant</p>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Nom d'utilisateur</label>
+                        <input type="text" id="username" placeholder="Entrez votre identifiant" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Mot de passe</label>
+                        <input type="password" id="password" placeholder="Entrez votre mot de passe" required>
+                    </div>
+                    <button type="submit">
+                        <i class="fas fa-sign-in-alt"></i> Se connecter
+                    </button>
+                    <div id="error" class="error"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="js/api.js?v=1.0.7"></script>
+    <script src="js/cache-buster.js?v=1.0.7"></script>
+    <script src="js/auth.js?v=1.0.7"></script>
+    <script src="js/theme.js?v=1.0.7"></script>
+</body>
+</html>

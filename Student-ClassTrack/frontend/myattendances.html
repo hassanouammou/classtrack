@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="ClassTrack - Mes Présences">
+    <meta name="theme-color" content="#0066cc">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>ClassTrack - Mes Présences</title>
+    <link rel="icon" href="../assets/favicon.svg">
+    <script defer src="js/qrscanner.js?v=1.0.9"></script>
+    <!-- Preload fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css?v=1.0.7">
+    <link rel="stylesheet" href="css/dashboard.css?v=1.0.7">
+    <link rel="stylesheet" href="css/myattendances.css?v=1.0.7">
+</head>
+<body>
+    <!-- Overlay pour fermer le menu -->
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+    
+    <div class="container-main">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="logo">
+                <span>ClassTrack</span>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-label">Menu Principal</div>
+                <div class="nav-item" onclick="goToDashboard()">
+                    <span class="nav-icon"><i class="fas fa-home"></i></span>
+                    Dashboard
+                </div>
+                <div class="nav-item active" onclick="goToAttendance()">
+                    <span class="nav-icon"><i class="fas fa-calendar-check"></i></span>
+                    Mes Présences
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-label">Support</div>
+                <div class="nav-item">
+                    <span class="nav-icon"><i class="fas fa-book-open"></i></span>
+                    Documentation
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon"><i class="fas fa-headset"></i></span>
+                    Assistance
+                </div>
+            </div>
+            
+            <div class="user-section">
+                <div class="user-avatar" id="userAvatar"></div>
+                <div class="user-name" id="userName"></div>
+                <div class="user-role">Étudiant</div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            </div>
+        </div>
+        
+        <!-- MAIN CONTENT -->
+        <div class="main">
+            <div class="header">
+                <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 id="pageTitle">Mes Présences</h1>
+                <div class="header-actions">
+                    <input type="text" class="search-bar" placeholder="Rechercher...">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Basculer le thème">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Attendance View -->
+            <div id="attendanceView" class="view active">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <h3><i class="fas fa-list"></i> Historique des Présences</h3>
+                        <button onclick="openQRScanner()" style="
+                            padding: 8px 16px;
+                            background: linear-gradient(135deg, #0066cc, #1a7fe5);
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            font-weight: 600;
+                            font-size: 13px;
+                            display: flex;
+                            align-items: center;
+                            gap: 6px;
+                        ">
+                            <i class="fas fa-qrcode"></i> Marker présence
+                        </button>
+                    </div>
+                    <table id="attendanceTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js?v=1.0.7"></script>
+    <script src="js/cache-buster.js?v=1.0.7"></script>
+    <script src="js/mobile-nav.js?v=1.0.7"></script>
+    <script src="js/theme.js?v=1.0.7"></script>
+    <script src="js/myattendances.js?v=1.0.7"></script>
+</body>
+</html>
