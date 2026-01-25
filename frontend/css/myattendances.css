@@ -1,0 +1,99 @@
+/* Styles spécifiques pour la page Mes Présences */
+
+.view.active {
+    display: block;
+}
+
+/* Amélioration du tableau des présences */
+#attendanceTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+#attendanceTable tr:first-child th {
+    position: sticky;
+    top: 0;
+    background: var(--card);
+    z-index: 10;
+}
+
+#attendanceTable tr:hover {
+    background: var(--hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#attendanceTable td {
+    transition: all 0.2s ease;
+}
+
+/* Animation d'entrée pour les lignes du tableau */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#attendanceTable tr {
+    animation: fadeInUp 0.3s ease forwards;
+}
+
+#attendanceTable tr:nth-child(1) { animation-delay: 0.05s; }
+#attendanceTable tr:nth-child(2) { animation-delay: 0.1s; }
+#attendanceTable tr:nth-child(3) { animation-delay: 0.15s; }
+#attendanceTable tr:nth-child(4) { animation-delay: 0.2s; }
+#attendanceTable tr:nth-child(5) { animation-delay: 0.25s; }
+
+/* ==================== RESPONSIVE MOBILE ==================== */
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    /* Rendre le titre de la section plus compact */
+    .card > div[style] h3 {
+        font-size: 15px !important;
+    }
+    
+    /* Optimiser le bouton QR Scanner */
+    .card > div[style] button {
+        padding: 8px 12px !important;
+        font-size: 13px !important;
+    }
+    
+    /* Table scroll horizontal avec indicateur visuel */
+    .card {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .card::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 30px;
+        background: linear-gradient(to left, var(--card), transparent);
+        pointer-events: none;
+        opacity: 0.5;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Empiler le titre et le bouton sur mobile */
+    .card > div[style] {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+    }
+    
+    .card > div[style] button {
+        width: 100%;
+        justify-content: center !important;
+    }
+}
